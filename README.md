@@ -9,3 +9,5 @@ Demo of Babylon.js
 
 3.  More Babylon.js tutorials: https://doc.babylonjs.com/tutorials
 
+Great WebGL book if you want to learn the nitty gritty: http://www.amazon.com/Interactive-Computer-Graphics-Top-Down-Approach/dp/0133574849/ref=dp_ob_title_bk
+
