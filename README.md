@@ -11,3 +11,4 @@ Demo of Babylon.js
 
 Great WebGL book if you want to learn the nitty gritty: http://www.amazon.com/Interactive-Computer-Graphics-Top-Down-Approach/dp/0133574849/ref=dp_ob_title_bk
 
+Link to live version of end result: https://s3-us-west-2.amazonaws.com/webgltherightway/index+(1).html
