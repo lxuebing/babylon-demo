@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html> 
-
 <head> 
-
 <meta charset="utf-8"> <title>Babylon - Basic scene</title> 
 
 <style> html,
@@ -19,35 +17,20 @@ body {
 	height: 100%;
 	touch-action: none;
 }
-
 </style> 
 
 <script src="https://s3-us-west-2.amazonaws.com/webgltherightway/hand.minified-1.2.js">
 </script> <script src="https://s3-us-west-2.amazonaws.com/webgltherightway/babylon.max-2.1.js"></script> 
-
 </head> 
 
 <body> 
 
 <input type="range" id="myRange" value="1" min="0" max="1" step="0.1" style="position: absolute; left: 0px; top: 0px;" onchange="myRangeOnChangeAction(this.value)">
-
 <canvas id="renderCanvas"></canvas> 
 
 <script type="text/javascript">
 
-// Get the canvas element from our HTML below
-var canvas = document.querySelector("#renderCanvas");
-// Load the BABYLON 3D engine
-
-var engine = new BABYLON.Engine(canvas, true);
-
-var myRangeValue = 1;
-var f = function(x, y, z) {
-	return x * y * Math.cos(z * myRangeValue);
-};
-
 var data = undefined;
-
 var createSampleData = function() {
 	data = [];
 	var X = [];
@@ -76,32 +59,13 @@ var createSpheres = function(scene) {
 	spheres = [];
 	var sphere = undefined;
 	for (var i = 0; i < data.length; i++) {
+		// See http://doc.babylonjs.com/tutorials/Discover_Basic_Elements
 		sphere = BABYLON.Mesh.CreateSphere("sphere" + i.toString(), 3, 0.6, scene);
 		sphere.position.x = data[i][0];
 		sphere.position.y = data[i][1];
 		sphere.position.z = data[i][2];
 		spheres.push(sphere);
 	}
-};
-
-var colorizeASphere=function (sphere, rgb, scene) {
-	var sphereMaterial=new BABYLON.StandardMaterial("sphereMaterial", scene);
-	sphereMaterial.emissiveColor=new BABYLON.Color3(rgb[0]/255, rgb[1]/255, rgb[2]/255);
-	sphereMaterial.diffuseColor=BABYLON.Color3.Black();
-	sphereMaterial.specularColor=BABYLON.Color3.White();
-	sphere.material=sphereMaterial;
-};
-
-var mapValueToColor = function(value, min, max) {
-	// Normalize value
-	var normalizedValue = (value - min) / (max - min);
-	var r = -4420.2 * Math.pow(normalizedValue, 4) + 10431 * Math.pow(normalizedValue, 3) - 6843.3 * Math.pow(normalizedValue, 2) + 838.98 * normalizedValue + 251.08;
-	r = Math.min(Math.max(r, 0), 255);
-	var g = 1897 * Math.pow(normalizedValue, 3) - 3857.8 * Math.pow(normalizedValue, 2) + 1967.4 * normalizedValue - 26.175;
-	g = Math.min(Math.max(g, 0), 255);
-	var b = -195.22 * Math.pow(normalizedValue, 4) - 1844.8 * Math.pow(normalizedValue, 3) + 3054.3 * Math.pow(normalizedValue, 2) - 867.2 * normalizedValue + 43.427;
-	b = Math.min(Math.max(b, 0), 255);
-	return [r, g, b];
 };
 
 var colorizeAllSpheres = function(scene) {
@@ -118,47 +82,99 @@ var colorizeAllSpheres = function(scene) {
 	}
 };
 
-var myRangeOnChangeAction = function(value) {
-	myRangeValue = value;
-	colorizeAllSpheres(scene);
+var myRangeValue = 1;
+var f = function(x, y, z) {
+	return x * y * Math.cos(z * myRangeValue);
 };
 
-var createScene = function() {
-	// Now create a basic Babylon Scene object
-	var scene = new BABYLON.Scene(engine);
-	// Change the scene background color to green.
-	scene.clearColor = new BABYLON.Color3(1, 1, 1);
-	var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 45.0 * (Math.PI / 180.0), 45.0 * (Math.PI / 180.0), 22, new BABYLON.Vector3(5.5, 5.5, 5.5), scene);
-	// Attach camera to the scene and the canvas
-	scene.activeCamera = camera;
-	camera.attachControl(canvas, true);
-	// This creates a light, aiming 0,1,0 - to the sky.
-	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-	// Dim the light a small amount
-	light.intensity = .5;
-	createSampleData();
-	createSpheres(scene);
-	colorizeAllSpheres(scene);
-	// Leave this function
-	return scene;
-}; // End of createScene function
+var mapValueToColor = function(value, min, max) {
+	// Normalize value
+	var normalizedValue = (value - min) / (max - min);
+	var r = -4420.2 * Math.pow(normalizedValue, 4) + 10431 * Math.pow(normalizedValue, 3) - 6843.3 * Math.pow(normalizedValue, 2) + 838.98 * normalizedValue + 251.08;
+	r = Math.min(Math.max(r, 0), 255);
+	var g = 1897 * Math.pow(normalizedValue, 3) - 3857.8 * Math.pow(normalizedValue, 2) + 1967.4 * normalizedValue - 26.175;
+	g = Math.min(Math.max(g, 0), 255);
+	var b = -195.22 * Math.pow(normalizedValue, 4) - 1844.8 * Math.pow(normalizedValue, 3) + 3054.3 * Math.pow(normalizedValue, 2) - 867.2 * normalizedValue + 43.427;
+	b = Math.min(Math.max(b, 0), 255);
+	return [r, g, b];
+};
 
-// Now, call the createScene function that you just finished creating
-var scene = createScene();
+var colorizeASphere = function (sphere, rgb, scene) {
+	// See https://doc.babylonjs.com/tutorials/Materials
+	var sphereMaterial=new BABYLON.StandardMaterial("sphereMaterial", scene);
+	sphereMaterial.emissiveColor=new BABYLON.Color3(rgb[0]/255, rgb[1]/255, rgb[2]/255);
+	sphereMaterial.diffuseColor=BABYLON.Color3.Black();
+	sphereMaterial.specularColor=BABYLON.Color3.White();
+	sphere.material=sphereMaterial;
+};
 
-//When pointer down event is raised
+
+
+
+
+
+
+
+
+
+// Get our canvas element
+var canvas = document.getElementById("renderCanvas");
+
+// Load the BABYLON 3D engine
+var engine = new BABYLON.Engine(canvas, true);
+
+// Create a basic Babylon Scene object
+var scene = new BABYLON.Scene(engine);
+
+// Set the scene background color to white.
+scene.clearColor = new BABYLON.Color3(1, 1, 1);
+
+// Create an ArcRotateCamera with parameters name, alpha, beta, radius, target, scene
+// See https://doc.babylonjs.com/tutorials/Cameras
+var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera1", 45.0 * (Math.PI / 180.0), 45.0 * (Math.PI / 180.0), 22, new BABYLON.Vector3(5.5, 5.5, 5.5), scene);
+	
+// Attach camera to the scene and the canvas
+scene.activeCamera = camera;
+camera.attachControl(canvas, true);
+
+// Create a light and aim it: 0,1,0 - to the sky.
+// See https://doc.babylonjs.com/tutorials/Lights
+var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+
+// Dim the light
+light.intensity = .5;
+
+// Create our example data
+createSampleData();
+
+// Create our spheres
+createSpheres(scene);
+
+// Colorize our spheres
+colorizeAllSpheres(scene);
+
+// Add interactions
+// On bubble click action
 scene.onPointerDown = function (evt, pickResult) {
     if (pickResult.hit) {
         pickResult.pickedMesh.setEnabled(false);
     }
 };
+// On range change action
+var myRangeOnChangeAction = function(value) {
+	myRangeValue = value;
+	colorizeAllSpheres(scene);
+};
 
-// Register a render loop to repeatedly render the scene
+// Create and run render loop
 engine.runRenderLoop(function() {
 	
+		// Add gentle rotation to scene
 		scene.activeCamera.alpha += 0.5 * (Math.PI / 180.0);
 	
+		// Render the scene
 		scene.render();
+		
 	}
 
 );
@@ -169,9 +185,7 @@ window.addEventListener("resize", function() {
 	}
 );
 
-
 </script> 
 
 </body> 
-
 </html>
